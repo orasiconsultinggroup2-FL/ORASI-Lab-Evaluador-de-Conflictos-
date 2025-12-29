@@ -1,73 +1,38 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import Layout from "./components/Layout";
+import Login from "./screens/Login";
+import Dashboard from "./screens/Dashboard";
+import Identification from "./screens/Identification";
 
-import Layout from './components/Layout';
-import Login from './screens/Login';
-import Dashboard from './screens/Dashboard';
-import Identificacion from './screens/Identificacion';
-
-import { ConflictProvider, useConflict } from './context/ConflictContext';
-
-/**
- * Protege rutas que requieren login
- */
-const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { user } = useConflict();
-  if (!user) return <Navigate to="/login" replace />;
-  return <>{children}</>;
-};
-
-const AppRoutes: React.FC = () => {
-  const { user } = useConflict();
-
+export default function App() {
   return (
-    <Routes>
-      {/* ENTRADA ÚNICA */}
-      <Route
-        path="/"
-        element={<Navigate to={user ? '/dashboard' : '/login'} replace />}
-      />
+    <BrowserRouter>
+      <Routes>
+        {/* LOGIN (SIN LAYOUT) */}
+        <Route path="/login" element={<Login />} />
 
-      {/* LOGIN (SIN LAYOUT, CON LOGO) */}
-      <Route path="/login" element={<Login />} />
-
-      {/* APP POST-LOGIN (CON LAYOUT) */}
-      <Route
-        path="/dashboard"
-        element={
-          <PrivateRoute>
+        {/* APP (CON LAYOUT) */}
+        <Route
+          path="/"
+          element={
             <Layout>
               <Dashboard />
             </Layout>
-          </PrivateRoute>
-        }
-      />
+          }
+        />
 
-      <Route
-        path="/identificacion"
-        element={
-          <PrivateRoute>
+        <Route
+          path="/identification"
+          element={
             <Layout>
-              <Identificacion />
+              <Identification />
             </Layout>
-          </PrivateRoute>
-        }
-      />
+          }
+        />
 
-      {/* FALLBACK */}
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+        {/* FALLBACK */}
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    </BrowserRouter>
   );
-};
-
-const App: React.FC = () => {
-  return (
-    <ConflictProvider>
-      <BrowserRouter>
-        <AppRoutes />
-      </BrowserRouter>
-    </ConflictProvider>
-  );
-};
-
-export default App;
+}

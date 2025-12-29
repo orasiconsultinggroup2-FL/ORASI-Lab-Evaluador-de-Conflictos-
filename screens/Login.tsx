@@ -1,79 +1,59 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useConflict } from '../context/ConflictContext';
-import OrasiBrand from '../components/OrasiBrand';
+import OrasiBrand from "../components/OrasiBrand";
+import { useNavigate } from "react-router-dom";
 
-const Login: React.FC = () => {
-  const { setUser, setConflictInfo } = useConflict();
+export default function Login() {
   const navigate = useNavigate();
 
-  const [identityType, setIdentityType] = useState<'consultant' | 'community'>('consultant');
-  const [formData, setFormData] = useState({
-    name: '',
-    institution: '',
-    role: 'Senior Consultant',
-  });
-
-  const handleEnter = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (formData.name.trim() && formData.institution.trim()) {
-      setUser({ ...formData, type: identityType });
-      setConflictInfo({ gestorResponsable: formData.name });
-      navigate('/');
-    }
-  };
-
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-10">
+    <div className="min-h-screen w-screen flex items-center justify-center bg-slate-100 px-4">
+      <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-8">
+        <div className="flex flex-col items-center mb-6">
+          <OrasiBrand size={48} />
+          <h1 className="mt-4 text-2xl font-bold text-center">
+            EVALUADOR DE CONFLICTOS
+          </h1>
+          <p className="text-xs tracking-widest text-blue-600 mt-2">
+            MEJORES PROCESOS, MEJORES RELACIONES
+          </p>
+        </div>
 
-        {/* BRAND */}
-        <div className="mb-8 flex justify-center">
-          <OrasiBrand />
+        {/* TABS */}
+        <div className="flex bg-slate-100 rounded-full p-1 mb-6">
+          <button className="flex-1 bg-white rounded-full py-2 text-sm font-semibold">
+            Institución
+          </button>
+          <button className="flex-1 text-sm text-slate-400">
+            Comunidad
+          </button>
         </div>
 
         {/* FORM */}
-        <form onSubmit={handleEnter} className="space-y-4">
-
+        <div className="space-y-4">
           <input
-            type="text"
-            placeholder="Nombre completo"
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            className="w-full border rounded-lg px-4 py-3"
-            required
+            className="w-full border rounded-lg px-4 py-2"
+            placeholder="Ej: Luis Oré"
           />
-
           <input
-            type="text"
-            placeholder="Institución / Organización"
-            value={formData.institution}
-            onChange={(e) => setFormData({ ...formData, institution: e.target.value })}
-            className="w-full border rounded-lg px-4 py-3"
-            required
+            className="w-full border rounded-lg px-4 py-2"
+            placeholder="Ej: ORASI Lab"
           />
-
-          <select
-            value={formData.role}
-            onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-            className="w-full border rounded-lg px-4 py-3"
-          >
-            <option value="Senior Consultant">Consultor Senior</option>
-            <option value="Conflict Analyst">Analista de Conflictos</option>
-            <option value="Community Leader">Líder Comunitario</option>
+          <select className="w-full border rounded-lg px-4 py-2">
+            <option>Consultor Senior</option>
+            <option>Líder Comunitario</option>
           </select>
+        </div>
 
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white rounded-lg py-3 font-semibold"
-          >
-            ACCEDER AL SISTEMA
-          </button>
-        </form>
+        <button
+          onClick={() => navigate("/")}
+          className="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white rounded-lg py-3 font-semibold"
+        >
+          ACCEDER AL SISTEMA →
+        </button>
+
+        <p className="text-[10px] text-center text-slate-400 mt-6">
+          ORASI LAB · TECNOLOGÍA PARA LA PAZ SOCIAL
+        </p>
       </div>
     </div>
   );
-};
-
-export default Login;
+}

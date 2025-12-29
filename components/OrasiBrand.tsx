@@ -1,17 +1,14 @@
-const OrasiBrand = ({ size = 48 }: { size?: number }) => {
+import orasiIcon from "/branding/orasi-icon.png";
+
+export default function OrasiBrand({ size = 40 }: { size?: number }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+    <div className="flex items-center gap-3">
       <img
-        src="/branding/orasi-icon.png"
+        src={orasiIcon}
         alt="ORASI Lab"
         style={{ width: size, height: size }}
       />
-      <span style={{ fontSize: size * 0.6, fontWeight: 600 }}>
-        ORASI Lab
-      </span>
+      <span className="text-lg font-semibold">ORASI Lab</span>
     </div>
   );
-};
-
-export default OrasiBrand;
-
+}
