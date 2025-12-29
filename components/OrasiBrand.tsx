@@ -14,3 +14,4 @@ const OrasiBrand = ({ size = 48 }: { size?: number }) => {
 };
 
 export default OrasiBrand;
+

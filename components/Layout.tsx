@@ -24,9 +24,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
       {/* SIDEBAR */}
       <aside className="w-64 bg-slate-900 text-white p-6 flex flex-col">
-        <div className="mb-10">
-          <OrasiBrand />
-        </div>
+        <div className="mb-10 flex justify-center">
+  <OrasiBrand size={56} />
+</div>
 
         <button
           onClick={handleLogout}
