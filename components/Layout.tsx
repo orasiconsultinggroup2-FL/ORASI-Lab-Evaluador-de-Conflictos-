@@ -1,64 +1,43 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { useConflict } from "../context/ConflictContext";
+import { Outlet, useNavigate } from "react-router-dom";
 import OrasiBrand from "./OrasiBrand";
+import { useConflict } from "../context/ConflictContext";
 
-type LayoutProps = {
-  children: React.ReactNode;
-};
-
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+export default function Layout() {
   const { setUser } = useConflict();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    if (window.confirm("¿Desea cerrar la sesión de forma segura?")) {
-      setUser(null);
-      navigate("/login");
-    }
+  const logout = () => {
+    setUser(null);
+    navigate("/login");
   };
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-slate-100">
+    <div className="h-screen w-screen flex overflow-hidden bg-slate-50">
       {/* SIDEBAR */}
-      <aside className="w-64 flex-shrink-0 bg-slate-900 text-white flex flex-col p-6">
-        <div className="mb-8">
-          <OrasiBrand size={48} />
-          <div className="text-sm text-slate-300 mt-1">
-            Evaluador de Conflictos
-          </div>
-        </div>
+      <aside className="w-64 bg-slate-900 text-white flex flex-col p-6">
+        <OrasiBrand size={42} />
 
-        <nav className="flex-1 space-y-3 text-sm">
-          <button
-            onClick={() => navigate("/")}
-            className="block w-full text-left px-3 py-2 rounded hover:bg-slate-800"
-          >
-            Panel principal
+        <nav className="mt-10 flex flex-col gap-4 text-sm">
+          <button onClick={() => navigate("/")} className="text-left hover:text-blue-400">
+            Panel Principal
           </button>
-
-          <button
-            onClick={() => navigate("/identification")}
-            className="block w-full text-left px-3 py-2 rounded hover:bg-slate-800"
-          >
+          <button onClick={() => navigate("/identification")} className="text-left hover:text-blue-400">
             Identificación
           </button>
         </nav>
 
         <button
-          onClick={handleLogout}
-          className="mt-auto bg-red-600 hover:bg-red-700 rounded px-4 py-2 text-sm"
+          onClick={logout}
+          className="mt-auto bg-red-600 hover:bg-red-700 rounded-md py-2 text-sm"
         >
           Cerrar sesión
         </button>
       </aside>
 
-      {/* CONTENT */}
-      <main className="flex-1 overflow-auto p-8">
-        {children}
+      {/* CONTENIDO SCROLLABLE */}
+      <main className="flex-1 overflow-y-auto p-8">
+        <Outlet />
       </main>
     </div>
   );
-};
-
-export default Layout;
+}

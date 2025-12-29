@@ -1,56 +1,60 @@
-import React from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
-import Layout from "./components/Layout";
-import Login from "./screens/Login";
-import Dashboard from "./screens/Dashboard";
-import Identification from "./screens/Identification";
+import Layout from './components/Layout';
+import Login from './screens/Login';
+import Dashboard from './screens/Dashboard';
+import Identificacion from './screens/Identificacion';
 
-import { ConflictProvider, useConflict } from "./context/ConflictContext";
+import { ConflictProvider, useConflict } from './context/ConflictContext';
 
 /**
- * Protección de rutas:
- * - Si no hay usuario → Login
- * - Si hay usuario → App
+ * Protege rutas que requieren login
  */
-const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user } = useConflict();
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
+  if (!user) return <Navigate to="/login" replace />;
   return <>{children}</>;
 };
 
 const AppRoutes: React.FC = () => {
+  const { user } = useConflict();
+
   return (
     <Routes>
-      {/* LOGIN */}
-      <Route path="/login" element={<Login />} />
-
-      {/* APP PROTEGIDA */}
+      {/* ENTRADA ÚNICA */}
       <Route
         path="/"
+        element={<Navigate to={user ? '/dashboard' : '/login'} replace />}
+      />
+
+      {/* LOGIN (SIN LAYOUT, CON LOGO) */}
+      <Route path="/login" element={<Login />} />
+
+      {/* APP POST-LOGIN (CON LAYOUT) */}
+      <Route
+        path="/dashboard"
         element={
-          <ProtectedRoute>
+          <PrivateRoute>
             <Layout>
               <Dashboard />
             </Layout>
-          </ProtectedRoute>
+          </PrivateRoute>
         }
       />
 
       <Route
-        path="/identification"
+        path="/identificacion"
         element={
-          <ProtectedRoute>
+          <PrivateRoute>
             <Layout>
-              <Identification />
+              <Identificacion />
             </Layout>
-          </ProtectedRoute>
+          </PrivateRoute>
         }
       />
 
-      {/* CATCH ALL */}
+      {/* FALLBACK */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
