@@ -1,63 +1,29 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./screens/Login";
 import Dashboard from "./screens/Dashboard";
-import Identification from "./screens/Identification";
 import Layout from "./components/Layout";
 
-/* ===== AUTH SIMPLE ===== */
-const isAuthenticated = () => {
-  return Boolean(localStorage.getItem("orasi_user"));
-};
-
-/* ===== RUTA PROTEGIDA ===== */
-function PrivateRoute({ children }: { children: JSX.Element }) {
-  if (!isAuthenticated()) {
-    return <Navigate to="/" replace />;
-  }
-  return children;
+function ProtectedRoute({ children }: { children: JSX.Element }) {
+  const isAuth = localStorage.getItem("orasi_auth") === "true";
+  return isAuth ? children : <Navigate to="/" replace />;
 }
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* LOGIN */}
-        <Route
-          path="/"
-          element={
-            isAuthenticated() ? (
-              <Navigate to="/dashboard" replace />
-            ) : (
-              <Login />
-            )
-          }
-        />
+        <Route path="/" element={<Login />} />
 
-        {/* APP PRIVADA */}
         <Route
           path="/dashboard"
           element={
-            <PrivateRoute>
+            <ProtectedRoute>
               <Layout>
                 <Dashboard />
               </Layout>
-            </PrivateRoute>
+            </ProtectedRoute>
           }
         />
-
-        <Route
-          path="/identification"
-          element={
-            <PrivateRoute>
-              <Layout>
-                <Identification />
-              </Layout>
-            </PrivateRoute>
-          }
-        />
-
-        {/* CATCH ALL */}
-        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   );
